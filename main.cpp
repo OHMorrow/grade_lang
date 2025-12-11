@@ -122,6 +122,14 @@ int main(int argc, char** argv) {
             std::istringstream iss(key);
             std::string cmd;
             iss >> cmd;
+            if (cmd == "help" || cmd == "h") {
+                std::cout << "Commands:\n"
+                          << "  help, h                   Show this help message\n"
+                          << "  quit, q                   Exit the REPL\n"
+                          << "  include <path>, i <path>  Load additional program file\n"
+                          << "  get <category>            Print category value (or just type the category name)\n";
+                continue;
+            }
             if (cmd == "include" || cmd == "i") {
                 std::string rest;
                 std::getline(iss, rest);

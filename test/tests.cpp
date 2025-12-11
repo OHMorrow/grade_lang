@@ -2,7 +2,7 @@
 #include <sstream>
 #include <iostream>
 #include <string>
-#include <parser.h>
+#include "parser.h"
 
 bool isValidProgramFile(const std::string& path, std::string& errorMsg) {
     std::ifstream in(path);

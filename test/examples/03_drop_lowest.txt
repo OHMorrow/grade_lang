@@ -1,0 +1,15 @@
+quizes: drop(1 {
+    30%
+    80%
+    60%
+    90%
+})
+
+exam: {
+    92%
+}
+
+final_grade: {
+    quizes: 0.3
+    exam: 0.7
+}

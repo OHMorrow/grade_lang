@@ -1,0 +1,12 @@
+homework: {
+    80%
+    90%
+    70%
+}
+
+exam: 85%
+
+final_grade: {
+    homework: .4
+    exam: .6
+}

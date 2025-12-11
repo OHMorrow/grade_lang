@@ -1,0 +1,11 @@
+lab: fail
+exam: 95%
+
+final_grade:
+    require(
+        lab pass
+        require(
+            exam
+            0.7
+        )
+    )

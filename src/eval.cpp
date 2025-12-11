@@ -3,6 +3,8 @@
 #include <limits>
 #include <stdexcept>
 #include <vector>
+#include <iostream>
+#include <iomanip>
 
 // Helper: convert a Value* to double for list elements/weights.
 static double valueToDouble(Value* v) {
@@ -217,4 +219,97 @@ Value* castValue(Value* value, DataType targetType) {
             break;
     }
     return nullptr;
+}
+
+// Helper to print indentation
+static void printIndent(std::ostream& os, int indent) {
+    for (int i = 0; i < indent; ++i) os.put(' ');
+}
+
+// Helper to print a Value inline for AST printing (non-owning, don't delete)
+static void printValueInline(std::ostream& os, Value* v) {
+    if (!v) {
+        os << "<null>";
+        return;
+    }
+    switch (v->getType()) {
+        case DataType::TYPE_GRADE: {
+            double g = static_cast<GradeValue*>(v)->getVal();
+            if (std::isnan(g)) os << "undef";
+            else os << g;
+            break;
+        }
+        case DataType::TYPE_INTEGER: {
+            os << static_cast<IntegerValue*>(v)->getVal();
+            break;
+        }
+        case DataType::TYPE_LIST: {
+            ListValue* lv = static_cast<ListValue*>(v);
+            os << "{";
+            for (size_t i = 0; i < lv->size(); ++i) {
+                if (i) os << ", ";
+                double val = lv->getValueAt(i);
+                double wt  = lv->getWeightAt(i);
+                if (std::isnan(val)) os << "undef";
+                else os << val;
+                if (wt != 1.0) os << ":" << wt;
+            }
+            os << "}";
+            break;
+        }
+        default:
+            os << "<unknown>";
+    }
+}
+
+// ConstantExpr::printAST
+void ConstantExpr::printAST(std::ostream& os, int indent) const {
+    printIndent(os, indent);
+    os << "Constant: ";
+    // we can safely use evaluate with nullptr because ConstantExpr doesn't use ctx
+    Value* v = value;
+    printValueInline(os, v);
+    os << "\n";
+}
+
+// CategoryRefExpr::printAST
+void CategoryRefExpr::printAST(std::ostream& os, int indent) const {
+    printIndent(os, indent);
+    os << "CategoryRef: " << categoryName << "\n";
+}
+
+// ListExpr::printAST
+void ListExpr::printAST(std::ostream& os, int indent) const {
+    printIndent(os, indent);
+    os << "List:\n";
+    for (auto *el : elements) {
+        printIndent(os, indent + 2);
+        os << "- Element:\n";
+        if (el->valueExpr) {
+            el->valueExpr->printAST(os, indent + 4);
+        } else {
+            printIndent(os, indent + 4);
+            os << "Value: <null>\n";
+        }
+        if (el->weightExpr) {
+            printIndent(os, indent + 4);
+            os << "Weight:\n";
+            el->weightExpr->printAST(os, indent + 6);
+        }
+    }
+}
+
+// OperationExpr::printAST
+void OperationExpr::printAST(std::ostream& os, int indent) const {
+    printIndent(os, indent);
+    os << "Operation: " << operationName << "\n";
+    for (size_t i = 0; i < arguments.size(); ++i) {
+        printIndent(os, indent + 2);
+        os << "Arg " << i << ":\n";
+        if (arguments[i]) arguments[i]->printAST(os, indent + 4);
+        else {
+            printIndent(os, indent + 4);
+            os << "<null>\n";
+        }
+    }
 }

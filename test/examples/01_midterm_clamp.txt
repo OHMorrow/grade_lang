@@ -1,0 +1,7 @@
+midterm_2: 0.72
+
+total: clamp(0 100
+    curve(5
+        midterm_2
+    )
+)

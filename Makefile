@@ -1,46 +1,30 @@
-# Simple Makefile for GradeLang project
+# Makefile for GradeLang
+# Builds main.cpp and all .cpp files in src/, using headers from include/
 
-# Compiler and flags
-CXX ?= g++
-CXXFLAGS ?= -std=c++20 -O2 -Wall -I.
-LDFLAGS ?=
+CXX := g++
+CXXFLAGS := -std=c++17 -O2 -Iinclude -Wall -Wextra -g
 
-# Detect platform-specific executable suffix
-ifeq ($(OS),Windows_NT)
-    EXE := gradelang.exe
-else
-    EXE := gradelang
-endif
+SRC_DIR := src
+SRCS := main.cpp $(wildcard $(SRC_DIR)/*.cpp)
+OBJS := $(SRCS:.cpp=.o)
 
-# Source and object files (automatic)
-SOURCES := $(wildcard *.cpp)
-OBJECTS := $(SOURCES:.cpp=.o)
+TARGET := gradelang
 
-# Default target
-all: $(EXE)
+.PHONY: all clean run debug
 
-$(EXE): $(OBJECTS)
-	$(CXX) $(CXXFLAGS) -o $@ $^ $(LDFLAGS)
+all: $(TARGET)
 
-# Generic rule to build .o from .cpp
+$(TARGET): $(OBJS)
+	$(CXX) $(CXXFLAGS) -o $@ $(OBJS)
+
 %.o: %.cpp
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
-.PHONY: clean run rebuild
-
 clean:
-	$(RM) $(OBJECTS) $(EXE)
+	rm -f $(OBJS) $(TARGET)
 
-rebuild: clean all
+debug: CXXFLAGS += -O0 -ggdb
+debug: clean all
 
-# run target invokes the program with optional args passed via ARGS
 run: all
-	./$(EXE) $(ARGS)
-
-#Helpful print of variables
-print:
-	@echo "CXX=$(CXX)"
-	@echo "CXXFLAGS=$(CXXFLAGS)"
-	@echo "SOURCES=$(SOURCES)"
-	@echo "OBJECTS=$(OBJECTS)"
-	@echo "EXE=$(EXE)"
+	./$(TARGET)

@@ -1,0 +1,14 @@
+quizzes : (
+    30%
+    40%
+    90%
+    93%
+    undef
+    undef
+    undef
+    undef
+)
+
+quizzes_resolved : resolve(
+    quizzes 100
+)

@@ -53,6 +53,9 @@ public:
     virtual ~Expression() = default;
     virtual Value* evaluate(Context* ctx) const = 0;
     virtual std::unordered_set<std::string>* getDependencies() const = 0;
+
+    // New: print a formatted AST representation to the given stream with indent level.
+    virtual void printAST(std::ostream& os, int indent = 0) const = 0;
 };
 
 
@@ -64,6 +67,7 @@ public:
     ConstantExpr(Value* val) : value(val) {}
     Value* evaluate(Context* ctx) const override;
     std::unordered_set<std::string>* getDependencies() const override;
+    void printAST(std::ostream& os, int indent = 0) const override;
 };
 
 // Represents a reference to another category by name.
@@ -75,6 +79,7 @@ public:
     CategoryRefExpr(const std::string& name) : categoryName(name) {}
     Value* evaluate(Context* ctx) const override;
     std::unordered_set<std::string>* getDependencies() const override;
+    void printAST(std::ostream& os, int indent = 0) const override;
 };
 
 class ListElement {
@@ -93,6 +98,7 @@ public:
     ~ListExpr();
     Value* evaluate(Context* ctx) const override;
     std::unordered_set<std::string>* getDependencies() const override;
+    void printAST(std::ostream& os, int indent = 0) const override;
 };
 
 class OperationExpr : public Expression {
@@ -105,6 +111,7 @@ public:
     ~OperationExpr();
     Value* evaluate(Context* ctx) const override;
     std::unordered_set<std::string>* getDependencies() const override;
+    void printAST(std::ostream& os, int indent = 0) const override;
 };
 
 bool canCast(DataType fromType, DataType toType);

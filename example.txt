@@ -1,0 +1,73 @@
+// Example 1
+
+midterm_2: 0.72
+
+total: clamp(0 100
+    curve(5
+        midterm_2
+    )
+)
+
+// Example 2
+
+homework: {
+    80%
+    90%
+    70%
+}
+
+exam: 85%
+
+final_grade: {
+    homework: .4
+    exam: .6
+}
+
+// Dropping lowest scores
+
+quizes: drop(1 {
+    30%
+    80%
+    60%
+    90%
+})
+
+exam: {
+    92%
+}
+
+final_grade: {
+    quizes: 0.3
+    exam: 0.7
+}
+
+// Pass/fail
+
+lab: fail
+exam: 95%
+
+final_grade:
+    require(
+        lab pass
+        require(
+            exam
+            0.7
+        )
+    )
+
+// Undefined and resolve
+
+quizzes : {
+    30%
+    40%
+    90%
+    93%
+    undef
+    undef
+    undef
+    undef
+}
+
+quizzes_resolved : resolve(
+    quizzes 100
+)

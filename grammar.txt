@@ -1,0 +1,11 @@
+
+program: category* END_OF_FILE
+
+category: <IDENTIFIER> ':' expr
+
+// 'undef', 'pass', 
+expr: <PERCENT> | <UDOUBLE> | <INTEGER> | 'undef' | 'pass' | 'fail' | operation | list
+
+operation: <IDENTIFIER> '(' expr* ')'
+
+list: '{' '}'

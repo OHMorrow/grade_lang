@@ -20,6 +20,14 @@ static double valueToDouble(Value* v) {
             delete val;
             return out;
     }
+    return std::numeric_limits<double>::quiet_NaN();
+}
+
+Context::Context() {
+    // Initialize the value cache with constants
+    valueCache["pass"] = new GradeValue(1.0);
+    valueCache["fail"] = new GradeValue(0.0);
+    valueCache["undef"] = &undefinedGrade;
 }
 
 // Context implementation
@@ -37,6 +45,20 @@ Value* Context::getCategoryValue(const std::string& categoryName) {
         }
     }
     return &undefinedGrade;
+}
+
+// Add missing executeOperation implementation.
+// It forwards to the first provider that reports it has the operation.
+// We copy the argument list because provider interface takes a non-const vector<Value*>&.
+Value* Context::executeOperation(const std::string& operationName, const std::vector<Value*>& arguments) {
+    for (OperationProvider* op : operationProviders) {
+        if (!op) continue;
+        if (op->hasOperation(operationName)) {
+            std::vector<Value*> argsCopy = arguments;
+            return op->executeOperation(operationName, argsCopy);
+        }
+    }
+    throw std::invalid_argument("Operation not found: " + operationName);
 }
 
 // Program implementation
@@ -166,6 +188,7 @@ bool canCast(DataType fromType, DataType toType) {
         case DataType::TYPE_LIST:
             return toType == DataType::TYPE_LIST || toType == DataType::TYPE_GRADE;
     }
+    return false;
 }
 
 

@@ -58,8 +58,9 @@ struct TypeToDataType<unsigned long long> {
 template<typename T>
 T castArgument(Value* v);
 
+// Make explicit specializations inline to avoid multiple-definition errors
 template<>
-GradeValue* castArgument<GradeValue*>(Value* v) {
+inline GradeValue* castArgument<GradeValue*>(Value* v) {
     GradeValue* out = static_cast<GradeValue*>(castValue(v, DataType::TYPE_GRADE));
     if (!out) {
         throw std::invalid_argument("Failed to cast argument to GradeValue.");
@@ -68,7 +69,7 @@ GradeValue* castArgument<GradeValue*>(Value* v) {
 }
 
 template<>
-IntegerValue* castArgument<IntegerValue*>(Value* v) {
+inline IntegerValue* castArgument<IntegerValue*>(Value* v) {
     IntegerValue* out = static_cast<IntegerValue*>(castValue(v, DataType::TYPE_INTEGER));
     if (!out) {
         throw std::invalid_argument("Failed to cast argument to IntegerValue.");
@@ -77,7 +78,7 @@ IntegerValue* castArgument<IntegerValue*>(Value* v) {
 }
 
 template<>
-ListValue* castArgument<ListValue*>(Value* v) {
+inline ListValue* castArgument<ListValue*>(Value* v) {
     ListValue* out = static_cast<ListValue*>(castValue(v, DataType::TYPE_LIST));
     if (!out) {
         throw std::invalid_argument("Failed to cast argument to ListValue.");
@@ -86,7 +87,7 @@ ListValue* castArgument<ListValue*>(Value* v) {
 }
 
 template<>
-double castArgument<double>(Value* v) {
+inline double castArgument<double>(Value* v) {
     GradeValue* gv = static_cast<GradeValue*>(castValue(v, DataType::TYPE_GRADE));
     if (!gv) {
         throw std::invalid_argument("Failed to cast argument to double.");
@@ -96,7 +97,7 @@ double castArgument<double>(Value* v) {
 }
 
 template<>
-unsigned long long castArgument<unsigned long long>(Value* v) {
+inline unsigned long long castArgument<unsigned long long>(Value* v) {
     IntegerValue* iv = static_cast<IntegerValue*>(castValue(v, DataType::TYPE_INTEGER));
     if (!iv) {
         throw std::invalid_argument("Failed to cast argument to unsigned long long.");
@@ -108,28 +109,29 @@ unsigned long long castArgument<unsigned long long>(Value* v) {
 template<typename T>
 Value* castReturnValue(T retVal);
 
+// Mark explicit return-value specializations inline as well
 template<>
-Value* castReturnValue<GradeValue*>(GradeValue* retVal) {
+inline Value* castReturnValue<GradeValue*>(GradeValue* retVal) {
     return retVal;
 }
 
 template<>
-Value* castReturnValue<IntegerValue*>(IntegerValue* retVal) {
+inline Value* castReturnValue<IntegerValue*>(IntegerValue* retVal) {
     return retVal;
 }
 
 template<>
-Value* castReturnValue<ListValue*>(ListValue* retVal) {
+inline Value* castReturnValue<ListValue*>(ListValue* retVal) {
     return retVal;
 }
 
 template<>
-Value* castReturnValue<double>(double retVal) {
+inline Value* castReturnValue<double>(double retVal) {
     return new GradeValue(retVal);
 }
 
 template<>
-Value* castReturnValue<unsigned long long>(unsigned long long retVal) {
+inline Value* castReturnValue<unsigned long long>(unsigned long long retVal) {
     return new IntegerValue(retVal);
 }
 

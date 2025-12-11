@@ -17,6 +17,7 @@ public:
     std::vector<OperationProvider*> operationProviders;
     // This function should ensure that no circular dependencies occur and that all
     // dependencies are cached before finding categoryName.
+    Context(); // updates the value cache with the constants pass, fail, and undef.
     Value* getCategoryValue(const std::string& categoryName);
     Value* executeOperation(const std::string& operationName, const std::vector<Value*>& arguments);
 };

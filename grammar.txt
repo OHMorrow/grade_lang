@@ -3,9 +3,10 @@ program: category* END_OF_FILE
 
 category: <IDENTIFIER> ':' expr
 
-// 'undef', 'pass', 
-expr: <PERCENT> | <UDOUBLE> | <INTEGER> | 'undef' | 'pass' | 'fail' | operation | list
+expr: <PERCENT> | <UDOUBLE> | <INTEGER> | operation | <IDENTIFIER> | list
 
 operation: <IDENTIFIER> '(' expr* ')'
 
-list: '{' '}'
+list: '{' list_item* '}'
+
+list_item: expr ( ':' expr )?

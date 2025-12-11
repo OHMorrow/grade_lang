@@ -96,13 +96,22 @@ size_t _consumeWhitespace(const std::string& input, size_t startPos) {
                 }
             } else if (pos < input.size() && input[pos] == '*') {
                 // multi-line comment
-                pos++;
+                // remember the position of the leading '/'
+                size_t slashPos = pos - 1;
+                pos++; // move past '*'
+                bool closed = false;
                 while (pos + 1 < input.size()) {
                     if (input[pos] == '*' && input[pos + 1] == '/') {
                         pos += 2;
+                        closed = true;
                         break;
                     }
                     pos++;
+                }
+                if (!closed) {
+                    // unterminated comment: do not consume it — restore to the '/' so tokenizer can handle it
+                    pos = slashPos;
+                    break;
                 }
             } else {
                 // not a comment, step back

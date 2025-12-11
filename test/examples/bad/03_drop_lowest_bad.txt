@@ -1,4 +1,4 @@
-// / Dropping lowest scores /
+/* / Dropping lowest scores /
 
 quizes: drop(.7 {
     30%

@@ -1,0 +1,1 @@
+complex_list: { sum(10 20):1 avg(30 40):2 50 }

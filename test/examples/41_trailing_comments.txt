@@ -1,0 +1,1 @@
+trailing_comments: 100 // this is allowed

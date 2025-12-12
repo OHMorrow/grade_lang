@@ -1,0 +1,2 @@
+colon_only_in_file:
+:

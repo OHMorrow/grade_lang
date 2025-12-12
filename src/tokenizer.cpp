@@ -16,7 +16,14 @@ std::vector<Token> tokenize(const std::string& input) {
                 break;
             }
             currentChar = input[pos];
-            if (isalpha(static_cast<unsigned char>(currentChar)) || currentChar == '_' || currentChar == '-' || currentChar == '/' || currentChar == '.') {
+            // allow UDOUBLE starting with '.' when followed by a digit
+            if (currentChar == '.' && pos + 1 < input.size() && isdigit(static_cast<unsigned char>(input[pos + 1]))) {
+                state = 'd';
+                tokenStart = pos;
+                pos++; // consume the '.'
+            }
+            // NOTE: Removed '.' from start characters so a single '.' becomes UNKNOWN.
+            else if (isalpha(static_cast<unsigned char>(currentChar)) || currentChar == '_' || currentChar == '-' || currentChar == '/') {
                 state = 'i';
                 tokenStart = pos;
                 pos++;
@@ -44,6 +51,7 @@ std::vector<Token> tokenize(const std::string& input) {
                 pos++;
             }
         } else if (state == 'i') {
+            // allow '.' inside identifiers so things like "special-id/1.2" are a single IDENTIFIER
             if (isalnum(static_cast<unsigned char>(currentChar)) || currentChar == '_' || currentChar == '-' || currentChar == '/' || currentChar == '.') {
                 pos++;
             } else {

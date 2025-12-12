@@ -1,0 +1,1 @@
+simple_double: 99.5

@@ -1,0 +1,1 @@
+ref_to_other: simple_int

@@ -1,0 +1,1 @@
+percent_bad: 50. %

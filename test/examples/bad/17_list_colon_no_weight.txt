@@ -1,0 +1,1 @@
+list_colon_no_weight: {100: }

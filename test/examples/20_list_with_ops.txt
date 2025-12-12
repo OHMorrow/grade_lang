@@ -1,0 +1,1 @@
+list_with_ops: { sum(100 90):1 80:2 }

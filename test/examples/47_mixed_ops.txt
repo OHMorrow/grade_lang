@@ -1,0 +1,1 @@
+mixed_ops: out(sum(1 2) mul(3 4) 50%)
